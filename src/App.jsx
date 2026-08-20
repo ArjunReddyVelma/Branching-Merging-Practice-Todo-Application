@@ -33,10 +33,11 @@ const initialTodos = [
     title: "Deploy the application",
     completed: false,
   },
-];
+]
 
 function App() {
   const [todos, setTodos] = useState(initialTodos)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const addTodo = (title) => {
     const newTodo = {
@@ -59,6 +60,10 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id))
   }
 
+  const filteredTodos = todos.filter((todo) =>
+    todo.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
@@ -70,15 +75,26 @@ function App() {
             Manage your tasks and stay productive.
           </p>
         </div>
-        
+
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
           <TodoForm onAddTodo={addTodo} />
         </div>
 
-        <TodoList 
-          todos={todos} 
-          onToggleTodo={toggleTodo} 
-          onDeleteTodo={deleteTodo} 
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search todos..."
+            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          />
+        </div>
+
+        <TodoList
+          todos={filteredTodos}
+          onToggleTodo={toggleTodo}
+          onDeleteTodo={deleteTodo}
+          searchTerm={searchTerm}
         />
       </div>
     </div>
